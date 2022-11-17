@@ -1,5 +1,6 @@
 import random
 import statistics
+import time
 
 def Coupe_Min(graphe,Liste_coupe):
     while len(graphe) > 2:
@@ -15,7 +16,7 @@ def Coupe_Min(graphe,Liste_coupe):
                 graphe[s1].append(arete)
         # supprimer les connections a s2 et les mettres vers s1
         for arete in graphe[s2]:
-            graphe[arete].remove(s2)  # was graphe[arete].remove(s2)
+            graphe[arete].remove(s2)
             if arete != s1:
                 graphe[arete].append(s1)
 
@@ -70,9 +71,10 @@ def stats():
     print('Nombre d aretes: ', nb_aretes)
 
 def main():
+    time1 = time.time()
     graphe = {}
     Liste_coupe = []
-    i = 10
+    i = 100
     while i>0 :
         graphe = {}
         charger_graphe(graphe)
@@ -86,10 +88,14 @@ def main():
     print("Coupe moyenne: ", statistics.mean(Liste_coupe))
 
     stats()
+    time2 = time.time()
 
+    print('Temps d execution: ', time2-time1)
 
 
 main()
+
+
 
 
 

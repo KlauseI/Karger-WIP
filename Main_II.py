@@ -1,6 +1,16 @@
 import random
 import statistics
 import time
+import pygame
+
+
+pygame.init()
+DIMENSION_FENETRE = (1600, 900)  # en pixels
+IPS = 25
+BLANC = (255, 255, 255)
+fenetre = pygame.display.set_mode(DIMENSION_FENETRE)
+pygame.display.set_caption("Algorithme de Karger")
+
 
 def Coupe_Min(graphe,Liste_coupe):
     while len(graphe) > 2:
@@ -16,7 +26,7 @@ def Coupe_Min(graphe,Liste_coupe):
                 graphe[s1].append(arete)
         # supprimer les connections a s2 et les mettres vers s1
         for arete in graphe[s2]:
-            graphe[arete].remove(s2)  # was graphe[arete].remove(s2)
+            graphe[arete].remove(s2)
             if arete != s1:
                 graphe[arete].append(s1)
 
@@ -74,7 +84,7 @@ def main():
     time1 = time.time()
     graphe = {}
     Liste_coupe = []
-    i = 500
+    i = 50
     while i>0 :
         graphe = {}
         charger_graphe(graphe)
@@ -94,7 +104,19 @@ def main():
 
 
 main()
+while True:
+    fenetre.fill(BLANC)
+    for evenement in pygame.event.get():
+        if evenement.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if evenement.type == pygame.KEYDOWN:
+            if evenement.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
+    pygame.display.flip()
+    pygame.time.Clock().tick(IPS)
 
 
 
