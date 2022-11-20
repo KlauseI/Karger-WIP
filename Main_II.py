@@ -11,13 +11,20 @@ IPS = 25
 NOIR = (0, 0, 0)
 VERT = (0, 255, 0)
 BLANC = (255, 255, 255)
-ORANGE = (238, 141, 14)
+RED = (255, 0, 0)
 fenetre = pygame.display.set_mode(DIMENSION_FENETRE)
 pygame.display.set_caption("Algorithme de Karger")
 
-rect_20 = pygame.Rect(100, 350, 410, 70)
-rect_200 = pygame.Rect(690, 350, 410, 70)
+rect_100x = pygame.Rect(550, 30, 100, 50)
 police_titre = pygame.font.SysFont('monospace', 30, True)
+police = pygame.font.SysFont('monospace',55, True)
+police_stats = pygame.font.SysFont('monospace', 30, True)
+
+mx, my = 0,0
+graphe = {}
+Liste_coupe = []
+graphe2 = {}
+Liste_coupe2 = []
 
 def Coupe_Min(graphe,Liste_coupe):
     while len(graphe) > 2:
@@ -55,8 +62,8 @@ def charger_graphe(graphe):
         Liste_arete.append(len(aretes))
     fichier.close()
 
-def stats():
-    fichier = open('matrice2.txt')
+def stats(nom):
+    fichier = open(nom)
     min_deg = 0
     max_deg = 0
     nb_aretes = 0
@@ -88,14 +95,49 @@ def stats():
     return mind_deg, max_deg, nb_sommets, nb_aretes
 
 def afficher():
-    pygame.draw.circle(fenetre, ORANGE, (600, 60), 50)
+    pygame.draw.rect(fenetre, RED, rect_100x)
     message_100x = police_titre.render("100X", True, NOIR)
-    fenetre.blit(message_100x, (550, 50))
+    fenetre.blit(message_100x, (563, 38))
+    message_20_sommets = police.render("20 Sommets", True, BLANC)
+    fenetre.blit(message_20_sommets, (115,25))
+    message_200_sommets = police.render("200 Sommets", True, BLANC)
+    fenetre.blit(message_200_sommets, (730, 25))
+    rect_20 = pygame.Rect(115, 85, 330, 10)
+    pygame.draw.rect(fenetre, RED, rect_20)
+    rect_200 = pygame.Rect(730, 85, 365, 10)
+    pygame.draw.rect(fenetre, RED, rect_200)
 
-def main():
+    fenetre.blit(write("Sommets",200,RED)[0],write("Sommets",200,RED)[1])
+    fenetre.blit(write("Arêtes", 270, RED)[0], write("Arêtes", 270, RED)[1])
+    fenetre.blit(write("Degré min", 340, RED)[0], write("Degré min", 340, RED)[1])
+    fenetre.blit(write("Degré max", 410, RED)[0], write("Degré min", 410, RED)[1])
+
+    fenetre.blit(write("Coupe min", 480, RED)[0], write("Coupe min", 480, RED)[1])
+    fenetre.blit(write("Coupe max", 550, RED)[0], write("Coupe max", 550, RED)[1])
+    fenetre.blit(write("Coupe moyenne", 620, RED)[0], write("Coupe moyenne", 620, RED)[1])
+    fenetre.blit(write("Temps d'exécution", 690, RED)[0], write("Temps d'exécution", 690, RED)[1])
+
+
+    if not flag:
+        pass
+def write(text, y, couleur):
+    text = police_stats.render(text, True, couleur)
+    text_rect = text.get_rect(center=(1200//2, y))
+    return text, text_rect
+
+
+def position_souris():
+    global mx,my,rect_100x
+    if rect_100x.collidepoint((mx, my)):
+        if flag:
+            flag = False
+            main(graphe, Liste_coupe,'matrice.txt')
+        else:
+            main(graphe2, Liste_coupe2, 'matrice2.txt')
+
+
+def main(graphe, Liste_coupe, nom):
     time1 = time.time()
-    graphe = {}
-    Liste_coupe = []
     i = 100
     while i>0 :
         graphe = {}
@@ -103,22 +145,21 @@ def main():
         Coupe_Min(graphe, Liste_coupe)
         i -= 1
 
-    #print("Nombres de sommets avant algorithme: ", nb_sommet)#len(list(graphe.keys())))
-    #print("Nombre d'aretes: ", nb_aretes/2)
     #print("Coupe minimale: ", min(Liste_coupe))
     #print("Coupe maximale: ", max(Liste_coupe))
     #print("Coupe moyenne: ", statistics.mean(Liste_coupe))
 
-    stats()
+    stats(nom)
     time2 = time.time()
 
     #print('Temps d execution: ', time2-time1)
 
 
-
+flag = True
 while True:
     fenetre.fill(NOIR)
     afficher()
+    mx, my = pygame.mouse.get_pos()
     for evenement in pygame.event.get():
         if evenement.type == pygame.QUIT:
             pygame.quit()
