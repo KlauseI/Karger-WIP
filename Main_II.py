@@ -2,15 +2,22 @@ import random
 import statistics
 import time
 import pygame
+import sys
 
 
 pygame.init()
-DIMENSION_FENETRE = (1600, 900)  # en pixels
+DIMENSION_FENETRE = (1200, 760)  # en pixels
 IPS = 25
+NOIR = (0, 0, 0)
+VERT = (0, 255, 0)
 BLANC = (255, 255, 255)
+ORANGE = (238, 141, 14)
 fenetre = pygame.display.set_mode(DIMENSION_FENETRE)
 pygame.display.set_caption("Algorithme de Karger")
 
+rect_20 = pygame.Rect(100, 350, 410, 70)
+rect_200 = pygame.Rect(690, 350, 410, 70)
+police_titre = pygame.font.SysFont('monospace', 30, True)
 
 def Coupe_Min(graphe,Liste_coupe):
     while len(graphe) > 2:
@@ -65,7 +72,6 @@ def stats():
             tmp += 1
             nb_aretes += 1
         if int(line[0]) == 1 and flag:
-            print('yikes')
             min_deg = tmp
             max_deg = tmp
             flag = 0
@@ -75,16 +81,22 @@ def stats():
         if tmp < min_deg:
             min_deg = tmp
     fichier.close()
-    print('Degre minimal: ', min_deg)
-    print('Degre maximal: ', max_deg)
-    print('Nombre de sommets: ', nb_sommets)
-    print('Nombre d aretes: ', nb_aretes)
+    #print('Degre minimal: ', min_deg)
+    #print('Degre maximal: ', max_deg)
+    #print('Nombre de sommets: ', nb_sommets)
+    #print('Nombre d aretes: ', nb_aretes)
+    return mind_deg, max_deg, nb_sommets, nb_aretes
+
+def afficher():
+    pygame.draw.circle(fenetre, ORANGE, (600, 60), 50)
+    message_100x = police_titre.render("100X", True, NOIR)
+    fenetre.blit(message_100x, (550, 50))
 
 def main():
     time1 = time.time()
     graphe = {}
     Liste_coupe = []
-    i = 50
+    i = 100
     while i>0 :
         graphe = {}
         charger_graphe(graphe)
@@ -93,19 +105,20 @@ def main():
 
     #print("Nombres de sommets avant algorithme: ", nb_sommet)#len(list(graphe.keys())))
     #print("Nombre d'aretes: ", nb_aretes/2)
-    print("Coupe minimale: ", min(Liste_coupe))
-    print("Coupe maximale: ", max(Liste_coupe))
-    print("Coupe moyenne: ", statistics.mean(Liste_coupe))
+    #print("Coupe minimale: ", min(Liste_coupe))
+    #print("Coupe maximale: ", max(Liste_coupe))
+    #print("Coupe moyenne: ", statistics.mean(Liste_coupe))
 
     stats()
     time2 = time.time()
 
-    print('Temps d execution: ', time2-time1)
+    #print('Temps d execution: ', time2-time1)
 
 
-main()
+
 while True:
-    fenetre.fill(BLANC)
+    fenetre.fill(NOIR)
+    afficher()
     for evenement in pygame.event.get():
         if evenement.type == pygame.QUIT:
             pygame.quit()

@@ -1,6 +1,19 @@
 import random
 import statistics
 import time
+import pygame
+import sys
+
+
+pygame.init()
+DIMENSION_FENETRE = (1200, 760)  # en pixels
+IPS = 25
+BLANC = (255, 255, 255)
+fenetre = pygame.display.set_mode(DIMENSION_FENETRE)
+pygame.display.set_caption("Algorithme de Karger")
+
+rect_20 = pygame.Rect(100, 350, 410, 70)
+rect_200 = pygame.Rect(690, 350, 410, 70)
 
 def Coupe_Min(graphe,Liste_coupe):
     while len(graphe) > 2:
@@ -55,7 +68,6 @@ def stats():
             tmp += 1
             nb_aretes += 1
         if int(line[0]) == 1 and flag:
-            print('yikes')
             min_deg = tmp
             max_deg = tmp
             flag = 0
@@ -83,6 +95,7 @@ def main():
 
     #print("Nombres de sommets avant algorithme: ", nb_sommet)#len(list(graphe.keys())))
     #print("Nombre d'aretes: ", nb_aretes/2)
+
     print("Coupe minimale: ", min(Liste_coupe))
     print("Coupe maximale: ", max(Liste_coupe))
     print("Coupe moyenne: ", statistics.mean(Liste_coupe))
@@ -94,9 +107,19 @@ def main():
 
 
 main()
+while True:
+    fenetre.fill(BLANC)
+    for evenement in pygame.event.get():
+        if evenement.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if evenement.type == pygame.KEYDOWN:
+            if evenement.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
 
-
-
+    pygame.display.flip()
+    pygame.time.Clock().tick(IPS)
 
 
 
